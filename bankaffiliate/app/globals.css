@@ -1,0 +1,67 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #04040a;
+  --bg-card: #0d0d18;
+  --bg-elevated: #12121f;
+  --border: rgba(240, 240, 250, 0.08);
+  --border-hover: rgba(245, 200, 66, 0.3);
+  --text: #f0f0fa;
+  --text-muted: rgba(240, 240, 250, 0.5);
+  --text-subtle: rgba(240, 240, 250, 0.3);
+  --gold: #f5c842;
+  --gold-dim: rgba(245, 200, 66, 0.1);
+  --gold-border: rgba(245, 200, 66, 0.2);
+  --green: #22c55e;
+  --red: #ef4444;
+}
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: var(--font-body), sans-serif;
+}
+
+@layer utilities {
+  .gold-glow {
+    background: radial-gradient(
+      ellipse at center,
+      rgba(245, 200, 66, 0.15) 0%,
+      transparent 70%
+    );
+  }
+}
+
+@keyframes pulse-gold {
+  0%,
+  100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.4;
+  }
+}
+
+.animate-pulse-gold {
+  animation: pulse-gold 2s ease-in-out infinite;
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+.animate-marquee {
+  animation: marquee 30s linear infinite;
+}
+
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(245, 200, 66, 0.2) transparent;
+}

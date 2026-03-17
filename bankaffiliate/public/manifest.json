@@ -1,0 +1,16 @@
+{
+  "name": "BankAffiliate",
+  "short_name": "BankAffiliate",
+  "description": "Global bank directory and affiliate program comparison",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04040A",
+  "theme_color": "#F5C842",
+  "icons": [
+    {
+      "src": "/icon.svg",
+      "sizes": "any",
+      "type": "image/svg+xml"
+    }
+  ]
+}
