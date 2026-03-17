@@ -89,11 +89,32 @@ outputs:
 runs:
   using: "composite"
   steps:
-    - name: Setup Node.js
+    - name: Setup Node.js (pnpm cache)
+      if: inputs.use_node_cache == 'true' && hashFiles('**/pnpm-lock.yaml') != ''
       uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # https://github.com/actions/setup-node/releases/tag/v4.4.0
       with:
         node-version: ${{ env.NODE_VERSION || '18.x' }}
-        cache: ${{ inputs.use_node_cache == 'true' && 'npm' || '' }}
+        cache: "pnpm"
+
+    - name: Setup Node.js (yarn cache)
+      if: inputs.use_node_cache == 'true' && hashFiles('**/pnpm-lock.yaml') == '' && hashFiles('**/yarn.lock') != ''
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # https://github.com/actions/setup-node/releases/tag/v4.4.0
+      with:
+        node-version: ${{ env.NODE_VERSION || '18.x' }}
+        cache: "yarn"
+
+    - name: Setup Node.js (npm cache)
+      if: inputs.use_node_cache == 'true' && hashFiles('**/pnpm-lock.yaml') == '' && hashFiles('**/yarn.lock') == '' && (hashFiles('**/package-lock.json') != '' || hashFiles('**/npm-shrinkwrap.json') != '')
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # https://github.com/actions/setup-node/releases/tag/v4.4.0
+      with:
+        node-version: ${{ env.NODE_VERSION || '18.x' }}
+        cache: "npm"
+
+    - name: Setup Node.js (no cache)
+      if: inputs.use_node_cache != 'true' || (hashFiles('**/pnpm-lock.yaml') == '' && hashFiles('**/yarn.lock') == '' && hashFiles('**/package-lock.json') == '' && hashFiles('**/npm-shrinkwrap.json') == '')
+      uses: actions/setup-node@49933ea5288caeca8642d1e84afbd3f7d6820020 # https://github.com/actions/setup-node/releases/tag/v4.4.0
+      with:
+        node-version: ${{ env.NODE_VERSION || '18.x' }}
 
     - name: Install Bun
       if: inputs.path_to_bun_executable == ''
