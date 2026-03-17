@@ -74,7 +74,11 @@ for arg in "$@"; do
 done
 
 if [[ "$CMD" == "search issues" ]]; then
-  QUERY="${POSITIONAL[0]:-}"
+  if [[ ${#POSITIONAL[@]} -ne 1 ]]; then
+    echo "Error: search issues requires exactly one query string (e.g., ./scripts/gh.sh search issues \"bug report\" --limit 10)" >&2
+    exit 1
+  fi
+  QUERY="${POSITIONAL[0]}"
   QUERY_LOWER=$(echo "$QUERY" | tr '[:upper:]' '[:lower:]')
   if [[ "$QUERY_LOWER" == *"repo:"* || "$QUERY_LOWER" == *"org:"* || "$QUERY_LOWER" == *"user:"* ]]; then
     echo "Error: search query must not contain repo:, org:, or user: qualifiers (e.g., ./scripts/gh.sh search issues \"bug report\" --limit 10)" >&2
