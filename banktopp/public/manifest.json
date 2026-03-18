@@ -1,0 +1,10 @@
+{
+  "name": "BankTopp — Beste norske banker",
+  "short_name": "BankTopp",
+  "description": "Sammenlign norske banker gratis og uavhengig",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#04040A",
+  "theme_color": "#F5C842",
+  "icons": [{ "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml" }]
+}
