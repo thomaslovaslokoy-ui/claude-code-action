@@ -1,0 +1,693 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Real Estate × Energy — Hidden Connections 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Mono:wght@300;400;500&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #0c0f14;
+    --bg2: #12161e;
+    --bg3: #1a1f2b;
+    --gold: #c9a84c;
+    --gold-lt: #e8c97a;
+    --amber: #d4622a;
+    --teal: #3a8fa0;
+    --slate: #8b95a8;
+    --text: #e8e4dc;
+    --text-dim: #7a8294;
+    --border: rgba(201,168,76,0.18);
+    --re-color: #3a8fa0;
+    --en-color: #d4622a;
+    --conn-color: #c9a84c;
+  }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
+    overflow-x: hidden;
+  }
+  body::before {
+    content: '';
+    position: fixed;
+    inset: 0;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.03'/%3E%3C/svg%3E");
+    pointer-events: none;
+    z-index: 0;
+    opacity: 0.4;
+  }
+  header {
+    padding: 3rem 2.5rem 2rem;
+    border-bottom: 1px solid var(--border);
+    position: relative;
+    z-index: 1;
+  }
+  .eyebrow {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.65rem;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.75rem;
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+  }
+  .eyebrow::after {
+    content: '';
+    flex: 1;
+    max-width: 80px;
+    height: 1px;
+    background: var(--gold);
+    opacity: 0.4;
+  }
+  h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.8rem, 4vw, 3rem);
+    font-weight: 400;
+    line-height: 1.15;
+    max-width: 700px;
+  }
+  h1 em {
+    font-style: italic;
+    color: var(--gold-lt);
+  }
+  .subtitle {
+    margin-top: 0.75rem;
+    color: var(--text-dim);
+    font-size: 0.9rem;
+    max-width: 560px;
+    line-height: 1.6;
+    font-weight: 300;
+  }
+  .legend {
+    display: flex;
+    gap: 2rem;
+    margin-top: 1.5rem;
+    flex-wrap: wrap;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.78rem;
+    font-family: 'DM Mono', monospace;
+    letter-spacing: 0.06em;
+    color: var(--slate);
+  }
+  .legend-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+  }
+  .main {
+    display: grid;
+    grid-template-columns: 1fr 400px;
+    min-height: calc(100vh - 160px);
+    position: relative;
+    z-index: 1;
+  }
+  .map-area {
+    padding: 2rem;
+    position: relative;
+  }
+  .map-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 1.5rem;
+  }
+  .node-column {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+  .node-card {
+    background: var(--bg2);
+    border: 1px solid transparent;
+    border-radius: 4px;
+    padding: 0.9rem 1rem;
+    cursor: pointer;
+    transition: all 0.25s ease;
+    position: relative;
+  }
+  .node-card.re { border-left: 3px solid var(--re-color); }
+  .node-card.en { border-right: 3px solid var(--en-color); }
+  .node-card:hover { background: var(--bg3); transform: translateY(-1px); }
+  .node-card.active { border-color: var(--gold) !important; background: rgba(201,168,76,0.06); }
+  .node-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--slate);
+    margin-bottom: 0.3rem;
+  }
+  .node-name {
+    font-size: 0.85rem;
+    font-weight: 500;
+    line-height: 1.3;
+    color: var(--text);
+  }
+  .node-stat {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.7rem;
+    color: var(--gold);
+    margin-top: 0.35rem;
+  }
+  .conn-btn {
+    background: var(--bg3);
+    border: 1px solid var(--gold);
+    border-radius: 20px;
+    padding: 0.35rem 0.7rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.08em;
+    color: var(--gold);
+    cursor: pointer;
+    white-space: nowrap;
+    transition: all 0.2s;
+    z-index: 10;
+  }
+  .conn-btn:hover, .conn-btn.active {
+    background: var(--gold);
+    color: var(--bg);
+  }
+  .panel {
+    border-left: 1px solid var(--border);
+    background: var(--bg2);
+    position: sticky;
+    top: 0;
+    height: 100vh;
+    overflow-y: auto;
+    display: flex;
+    flex-direction: column;
+  }
+  .panel-default {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 2rem;
+    text-align: center;
+    color: var(--text-dim);
+  }
+  .panel-default svg { opacity: 0.2; margin-bottom: 1rem; }
+  .panel-default p { font-size: 0.82rem; line-height: 1.6; max-width: 220px; }
+  .panel-content {
+    display: none;
+    flex-direction: column;
+    height: 100%;
+  }
+  .panel-content.visible { display: flex; }
+  .panel-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border);
+  }
+  .panel-tag {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .panel-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.25rem;
+    font-weight: 400;
+    line-height: 1.3;
+  }
+  .panel-body {
+    padding: 1.5rem;
+    flex: 1;
+    overflow-y: auto;
+  }
+  .connection-arrow {
+    display: flex;
+    align-items: center;
+    gap: 0.6rem;
+    margin-bottom: 1.2rem;
+    padding: 0.75rem;
+    background: var(--bg3);
+    border-radius: 4px;
+    font-size: 0.82rem;
+  }
+  .arrow-from { font-weight: 500; color: var(--re-color); font-size: 0.78rem; }
+  .arrow-to { font-weight: 500; color: var(--en-color); font-size: 0.78rem; }
+  .arrow-icon { color: var(--gold); flex-shrink: 0; font-size: 1rem; }
+  .insight-block { margin-bottom: 1.2rem; }
+  .insight-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.58rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    margin-bottom: 0.4rem;
+  }
+  .insight-text {
+    font-size: 0.84rem;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .stat-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    margin: 1rem 0;
+  }
+  .stat-chip {
+    background: rgba(201,168,76,0.1);
+    border: 1px solid rgba(201,168,76,0.25);
+    border-radius: 3px;
+    padding: 0.35rem 0.65rem;
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold-lt);
+  }
+  .strategy-block {
+    background: linear-gradient(135deg, rgba(58,143,160,0.08), rgba(201,168,76,0.06));
+    border: 1px solid rgba(201,168,76,0.2);
+    border-radius: 4px;
+    padding: 1rem;
+    margin-top: 1rem;
+  }
+  .strategy-title {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--gold);
+    margin-bottom: 0.6rem;
+  }
+  .strategy-text {
+    font-size: 0.82rem;
+    line-height: 1.65;
+    color: var(--text);
+    font-weight: 300;
+  }
+  .risk-bar {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border);
+  }
+  .risk-label {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.6rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text-dim);
+    white-space: nowrap;
+  }
+  .risk-track {
+    flex: 1;
+    height: 4px;
+    background: var(--bg3);
+    border-radius: 2px;
+    overflow: hidden;
+  }
+  .risk-fill {
+    height: 100%;
+    border-radius: 2px;
+    transition: width 0.6s ease;
+  }
+  .risk-value {
+    font-family: 'DM Mono', monospace;
+    font-size: 0.68rem;
+    color: var(--gold);
+    min-width: 30px;
+    text-align: right;
+  }
+  @media (max-width: 900px) {
+    .main { grid-template-columns: 1fr; }
+    .panel { position: static; height: auto; border-left: none; border-top: 1px solid var(--border); max-height: 600px; }
+  }
+  @keyframes fadeIn {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .panel-content.visible { animation: fadeIn 0.3s ease; }
+  .node-card { animation: fadeIn 0.5s ease both; }
+  .node-card:nth-child(1) { animation-delay: 0.1s; }
+  .node-card:nth-child(2) { animation-delay: 0.2s; }
+  .node-card:nth-child(3) { animation-delay: 0.3s; }
+  .node-card:nth-child(4) { animation-delay: 0.4s; }
+  .node-card:nth-child(5) { animation-delay: 0.5s; }
+</style>
+</head>
+<body>
+<header>
+  <div class="eyebrow">Strategic Intelligence · February 2026</div>
+  <h1>Where <em>Real Estate</em> &amp; <em>Energy</em><br>Secretly Collide</h1>
+  <p class="subtitle">Six unexpected market linkages shaping strategic decisions in 2026 — and the planning imperatives they create.</p>
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:var(--re-color)"></div>Real Estate Trend</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--en-color)"></div>Energy Trend</div>
+    <div class="legend-item"><div class="legend-dot" style="background:var(--gold)"></div>Hidden Connection</div>
+  </div>
+</header>
+<div class="main">
+  <div class="map-area">
+    <div class="map-title">/ Select a connection to explore its strategic implications</div>
+    <div style="position:relative; display:grid; grid-template-columns:1fr 160px 1fr; gap:0; align-items:center;">
+      <!-- RE Nodes -->
+      <div class="node-column" id="re-nodes">
+        <div class="node-card re" data-node="re1">
+          <div class="node-label">Real Estate</div>
+          <div class="node-name">AI Data Center Site Selection Boom</div>
+          <div class="node-stat">43% of all corporate power procurement</div>
+        </div>
+        <div class="node-card re" data-node="re2">
+          <div class="node-label">Real Estate</div>
+          <div class="node-name">Sun Belt Insurance & Price Collapse</div>
+          <div class="node-stat">+55% escrow costs in FL &amp; CO</div>
+        </div>
+        <div class="node-card re" data-node="re3">
+          <div class="node-label">Real Estate</div>
+          <div class="node-name">Institutional Build-to-Rent Surge</div>
+          <div class="node-stat">⅓ of all single-family purchases</div>
+        </div>
+        <div class="node-card re" data-node="re4">
+          <div class="node-label">Real Estate</div>
+          <div class="node-name">Commercial Real Estate Revival</div>
+          <div class="node-stat">+15–20% CRE sales volume forecast</div>
+        </div>
+        <div class="node-card re" data-node="re5">
+          <div class="node-label">Real Estate</div>
+          <div class="node-name">Stalled Housing Affordability</div>
+          <div class="node-stat">35% below pre-COVID affordability</div>
+        </div>
+      </div>
+      <!-- Connection Buttons -->
+      <div style="position:relative; display:flex; flex-direction:column; align-items:center; gap:1rem; padding:0 1rem;">
+        <button class="conn-btn" data-conn="c1" onclick="selectConn('c1')">⚡ Power → Location</button>
+        <button class="conn-btn" data-conn="c2" onclick="selectConn('c2')">🌊 Climate Risk</button>
+        <button class="conn-btn" data-conn="c3" onclick="selectConn('c3')">🔋 Grid-Powered RE</button>
+        <button class="conn-btn" data-conn="c4" onclick="selectConn('c4')">🔧 Copper Crunch</button>
+        <button class="conn-btn" data-conn="c5" onclick="selectConn('c5')">⛽ LNG → Gulf RE</button>
+        <button class="conn-btn" data-conn="c6" onclick="selectConn('c6')">📈 Rate Trap</button>
+      </div>
+      <!-- Energy Nodes -->
+      <div class="node-column" id="en-nodes">
+        <div class="node-card en" data-node="en1" style="text-align:left;">
+          <div class="node-label">Energy</div>
+          <div class="node-name">Power Access: The New Grid Bottleneck</div>
+          <div class="node-stat">100 GW of US data center capacity planned</div>
+        </div>
+        <div class="node-card en" data-node="en2" style="text-align:left;">
+          <div class="node-label">Energy</div>
+          <div class="node-name">Climate Volatility → Insurance Spiral</div>
+          <div class="node-stat">+8% insurance premiums forecast 2026</div>
+        </div>
+        <div class="node-card en" data-node="en3" style="text-align:left;">
+          <div class="node-label">Energy</div>
+          <div class="node-name">Distributed Solar + Battery Buildout</div>
+          <div class="node-stat">54 GW of new US capacity commissioned 2025</div>
+        </div>
+        <div class="node-card en" data-node="en4" style="text-align:left;">
+          <div class="node-label">Energy</div>
+          <div class="node-name">Copper Enters Supply Deficit</div>
+          <div class="node-stat">−1M metric ton deficit entering 2026</div>
+        </div>
+        <div class="node-card en" data-node="en5" style="text-align:left;">
+          <div class="node-label">Energy</div>
+          <div class="node-name">LNG Export Glut + Gulf Expansion</div>
+          <div class="node-stat">Golden Pass LNG: 5.2M tons/yr capacity</div>
+        </div>
+      </div>
+    </div>
+    <div style="margin-top: 2.5rem; padding-top: 1rem; border-top: 1px solid var(--border); display:flex; gap: 2rem; flex-wrap:wrap;">
+      <span style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; color:var(--text-dim);">SOURCES: J.P. Morgan · S&P Global Energy · BloombergNEF · Cotality · BCSE · EIA · WEF · PwC</span>
+      <span style="font-family:'DM Mono',monospace; font-size:0.6rem; letter-spacing:0.1em; color:var(--text-dim);">DATA AS OF: Feb 2026</span>
+    </div>
+  </div>
+  <!-- PANEL -->
+  <div class="panel">
+    <div class="panel-default" id="panel-default">
+      <svg width="40" height="40" viewBox="0 0 40 40" fill="none">
+        <circle cx="20" cy="20" r="18" stroke="#c9a84c" stroke-width="1.5"/>
+        <line x1="12" y1="20" x2="28" y2="20" stroke="#c9a84c" stroke-width="1.5"/>
+        <polyline points="22,15 28,20 22,25" stroke="#c9a84c" stroke-width="1.5" fill="none"/>
+      </svg>
+      <p>Click any <strong style="color:var(--gold)">golden connection</strong> to explore what it means for your strategic planning.</p>
+    </div>
+    <!-- C1 -->
+    <div class="panel-content" id="panel-c1">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 01 / 06</div>
+        <div class="panel-title">Power Is the New Location</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">AI Data Center RE Boom</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">Grid as Site Selector</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">Access to reliable, affordable power has overtaken connectivity as the #1 factor in data center site selection. Bloom Energy's 2025 survey confirmed this shift. With 48 GW of US data center capacity under construction, landlords and developers in power-rich regions are gaining a structural advantage over gateway markets.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">43% corporate power procurement</div>
+          <div class="stat-chip">100 GW planned US capacity</div>
+          <div class="stat-chip">PJM wholesale prices +45% YoY</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">Traditionally, data centers chased fiber hubs and tax incentives. Now they're chasing substations. This is reshaping industrial real estate geography in ways that bypass traditional gateway markets entirely — rural areas near power generation are suddenly prime RE targets.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">Map your commercial portfolio and development pipeline against grid capacity, not just demographics. Partner with utilities early. Regions able to offer fast, clean grid connections in 2026 will command a 3–5 year first-mover window in data center leasing before bottlenecks ease.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Opportunity Level</span>
+          <div class="risk-track"><div class="risk-fill" style="width:88%; background:var(--gold);"></div></div>
+          <span class="risk-value">88%</span>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Speed of Change</span>
+          <div class="risk-track"><div class="risk-fill" style="width:92%; background:var(--amber);"></div></div>
+          <span class="risk-value">92%</span>
+        </div>
+      </div>
+    </div>
+    <!-- C2 -->
+    <div class="panel-content" id="panel-c2">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 02 / 06</div>
+        <div class="panel-title">The Climate–Insurance–Migration Doom Loop</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">Sun Belt Price Collapse</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">Climate Volatility Spiral</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">Florida and Colorado escrow costs jumped 55–57% in 2025, driven by climate-linked insurance premiums. Cotality data shows that where property taxes and insurance rise fastest, mortgage delinquencies spike. This is triggering out-migration from Sun Belt markets — the same markets that were the biggest real estate boom stories of 2021–2023.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">+55% FL insurance escrow</div>
+          <div class="stat-chip">+8% national premium forecast</div>
+          <div class="stat-chip">In-migration to FL/TX stalled</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">The energy-to-insurance connection is indirect but powerful: rising extreme weather events (driven by energy consumption patterns globally) are making certain property markets literally uninsurable — not in 20 years, but now. The feedback loop accelerates as insurers withdraw and property values crater.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">Stress-test your Sun Belt portfolio for insurance cost trajectory, not just cap rates. Physical climate risk underwriting should be built into acquisition models. The Midwest and Northeast — historically less exciting — may offer the most durable returns as climate-resilience becomes a pricing premium.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Risk Level</span>
+          <div class="risk-track"><div class="risk-fill" style="width:82%; background:var(--amber);"></div></div>
+          <span class="risk-value">High</span>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Time Horizon</span>
+          <div class="risk-track"><div class="risk-fill" style="width:55%; background:var(--teal);"></div></div>
+          <span class="risk-value">3–5 yr</span>
+        </div>
+      </div>
+    </div>
+    <!-- C3 -->
+    <div class="panel-content" id="panel-c3">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 03 / 06</div>
+        <div class="panel-title">Build-to-Rent Becomes an Energy Asset</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">Institutional BTR Surge</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">Distributed Energy Buildout</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">Institutional investors now account for roughly one-third of all single-family home purchases. Unlike individual homeowners, these players are designing communities at scale — and they're integrating solar + battery storage from the ground up, creating private micro-grids that reduce operating costs and command rental premiums.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">⅓ of SF purchases = institutional</div>
+          <div class="stat-chip">54 GW new US capacity (2025)</div>
+          <div class="stat-chip">Solar lead time: 14–24 months</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">Residential real estate has never historically been an energy infrastructure play. The shift is creating a new asset class: BTR communities that generate, store, and even sell energy back to the grid. As electricity prices rise 32% over the past decade, energy cost control becomes a genuine competitive moat in rental housing.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">If you're developing or operating rental communities, model energy infrastructure as a capital expenditure that generates direct return — not just a sustainability checkbox. Partnerships with community solar and battery developers could meaningfully compress operating costs while differentiating the product.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Opportunity Level</span>
+          <div class="risk-track"><div class="risk-fill" style="width:75%; background:var(--gold);"></div></div>
+          <span class="risk-value">75%</span>
+        </div>
+      </div>
+    </div>
+    <!-- C4 -->
+    <div class="panel-content" id="panel-c4">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 04 / 06</div>
+        <div class="panel-title">The Copper Deficit Is a Construction Crisis</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">Stalled Affordability</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">Copper Supply Deficit</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">The copper market swings into a 1-million-metric-ton supply deficit in 2026. Copper is essential for EV charging infrastructure, building electrification, grid wiring, and new construction. As data center demand and EV rollout collide with slow mine permitting, construction cost inflation will compound the housing affordability crisis that is already 35% below pre-COVID index levels.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">−1M MT deficit in 2026</div>
+          <div class="stat-chip">35% below affordability index</div>
+          <div class="stat-chip">6%+ mortgage rates persist</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">The housing affordability story is usually told through mortgage rates and home prices. But a commodity-level supply crunch in copper — driven by the energy transition and AI buildout — will add a structural cost floor to new construction that rate cuts alone cannot overcome.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">Lock in material procurement contracts early for 2026–2027 development pipelines. Explore modular construction methods that reduce copper intensity. For affordable housing developers, the copper squeeze is a genuine existential variable — escalation clauses and supply chain hedging should be standard in all new contracts.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Risk Level</span>
+          <div class="risk-track"><div class="risk-fill" style="width:78%; background:var(--amber);"></div></div>
+          <span class="risk-value">High</span>
+        </div>
+      </div>
+    </div>
+    <!-- C5 -->
+    <div class="panel-content" id="panel-c5">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 05 / 06</div>
+        <div class="panel-title">LNG Boom Creates a Gulf Coast RE Surge</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">CRE Revival</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">LNG Export Expansion</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">The Golden Pass LNG project in Texas and the broader LNG export push are creating industrial real estate demand along the Gulf Coast that is largely invisible to residential market watchers. Pro-development policy and reopened LNG permitting under the current administration are catalyzing worker housing, logistics infrastructure, and industrial park development in previously overlooked coastal Texas and Louisiana markets.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">Golden Pass: 5.2M tons/yr</div>
+          <div class="stat-chip">8M tons new LNG capacity 2026</div>
+          <div class="stat-chip">Energy M&A up 27% in 2025</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">Commodity infrastructure plays typically don't move residential and mixed-use real estate — but mega-projects on this scale generate 10,000+ worker-years and permanently alter the demographics of surrounding communities. Houston already ranks in the top 5 on PwC's Emerging Trends report for 2026.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">Identify workforce housing and light industrial opportunities within 25–50 miles of major LNG and pipeline construction zones along the Gulf Coast. These markets are underfollowed by institutional capital and offer early-entry pricing with a multi-year demand tailwind from infrastructure buildout.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Opportunity Level</span>
+          <div class="risk-track"><div class="risk-fill" style="width:70%; background:var(--gold);"></div></div>
+          <span class="risk-value">70%</span>
+        </div>
+      </div>
+    </div>
+    <!-- C6 -->
+    <div class="panel-content" id="panel-c6">
+      <div class="panel-header">
+        <div class="panel-tag">Connection 06 / 06</div>
+        <div class="panel-title">The Rate Trap Is an Energy Demand Dispersal</div>
+      </div>
+      <div class="panel-body">
+        <div class="connection-arrow">
+          <span class="arrow-from">Stalled Affordability</span>
+          <span class="arrow-icon">→</span>
+          <span class="arrow-to">Grid Stress in Commuter Markets</span>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">What's happening</div>
+          <div class="insight-text">With mortgage rates stuck above 6%, buyers are locked out of urban cores and moving to lower-cost exurban and rural markets. These areas often have older, less resilient grid infrastructure. As EV adoption grows simultaneously, electricity demand is spiking in markets least prepared to handle it — creating both energy reliability risk and investment opportunity.</div>
+        </div>
+        <div class="stat-chips">
+          <div class="stat-chip">Mortgage apps up 31% YoY</div>
+          <div class="stat-chip">Electricity prices +32% (10 yr)</div>
+          <div class="stat-chip">377 GW interconnection backlog</div>
+        </div>
+        <div class="insight-block">
+          <div class="insight-label">Why it's unexpected</div>
+          <div class="insight-text">High mortgage rates are conventionally a real estate story. But they're quietly reshaping energy infrastructure demand in secondary markets. Builders offering rate buydowns (now standard at 4–5%) are concentrating new supply in exurban areas that are simultaneously experiencing EV grid strain and renewable energy development — creating complex, overlapping pressures on local utilities.</div>
+        </div>
+        <div class="strategy-block">
+          <div class="strategy-title">⊳ Strategic Planning Imperative</div>
+          <div class="strategy-text">For developers building in secondary and tertiary markets: treat grid capacity as a due-diligence item equivalent to zoning. Partner with local utilities during entitlement, not after. Communities that can offer EV-ready infrastructure with distributed energy will command a premium as the rate trap sends buyers further from city centers through 2027.</div>
+        </div>
+        <div class="risk-bar">
+          <span class="risk-label">Strategic Complexity</span>
+          <div class="risk-track"><div class="risk-fill" style="width:84%; background:var(--teal);"></div></div>
+          <span class="risk-value">High</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+<script>
+  let activeConn = null;
+  function selectConn(id) {
+    document.querySelectorAll('.panel-content').forEach(p => p.classList.remove('visible'));
+    document.getElementById('panel-default').style.display = 'flex';
+    document.querySelectorAll('.conn-btn').forEach(b => b.classList.remove('active'));
+    if (activeConn === id) {
+      activeConn = null;
+      return;
+    }
+    activeConn = id;
+    document.querySelector(`[data-conn="${id}"]`).classList.add('active');
+    const panel = document.getElementById(`panel-${id}`);
+    if (panel) {
+      document.getElementById('panel-default').style.display = 'none';
+      panel.classList.add('visible');
+    }
+  }
+  setTimeout(() => selectConn('c1'), 600);
+</script>
+</body>
+</html>
