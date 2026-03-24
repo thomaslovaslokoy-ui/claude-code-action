@@ -104,7 +104,7 @@ Add the following to your workflow file:
 | `claude_code_oauth_token` | Claude Code OAuth token (alternative to anthropic_api_key)                                                              | No       | ''                           |
 | `use_bedrock`             | Use Amazon Bedrock with OIDC authentication instead of direct Anthropic API                                             | No       | 'false'                      |
 | `use_vertex`              | Use Google Vertex AI with OIDC authentication instead of direct Anthropic API                                           | No       | 'false'                      |
-| `use_node_cache`          | Whether to use Node.js dependency caching (set to true only for Node.js projects with lock files)                       | No       | 'false'                      |
+| `use_node_cache`          | Whether to use Node.js dependency caching (auto-detects pnpm/yarn/npm from lock files such as `pnpm-lock.yaml`)         | No       | 'false'                      |
 | `show_full_output`        | Show full JSON output (⚠️ May expose secrets - see [security docs](../docs/security.md#️-full-output-security-warning)) | No       | 'false'\*\*                  |
 
 \*Either `prompt` or `prompt_file` must be provided, but not both.

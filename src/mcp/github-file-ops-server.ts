@@ -217,7 +217,7 @@ server.tool(
       // Validate all paths are within repository root and get full/relative paths
       const resolvedRepoDir = resolve(REPO_DIR);
       const validatedFiles = await Promise.all(
-        files.map(async (filePath) => {
+        files.map(async (filePath: string) => {
           const fullPath = await validatePathWithinRepo(filePath, REPO_DIR);
           // Calculate the relative path for the git tree entry
           // Use the original filePath (normalized) for the git path, not the symlink-resolved path
@@ -481,7 +481,7 @@ server.tool(
 
       // Convert absolute paths to relative if they match CWD
       const cwd = process.cwd();
-      const processedPaths = paths.map((filePath) => {
+      const processedPaths = paths.map((filePath: string) => {
         if (filePath.startsWith("/")) {
           if (filePath.startsWith(cwd)) {
             // Strip CWD from absolute path
@@ -521,7 +521,7 @@ server.tool(
       const baseTreeSha = commitData.tree.sha;
 
       // 3. Create tree entries for file deletions (setting SHA to null)
-      const treeEntries = processedPaths.map((path) => ({
+      const treeEntries = processedPaths.map((path: string) => ({
         path: path,
         mode: "100644",
         type: "blob" as const,
@@ -640,7 +640,7 @@ server.tool(
           author: newCommitData.author.name,
           date: newCommitData.author.date,
         },
-        deletedFiles: processedPaths.map((path) => ({ path })),
+        deletedFiles: processedPaths.map((path: string) => ({ path })),
         tree: {
           sha: treeData.sha,
         },
